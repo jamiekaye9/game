@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from .services.quiz_engine import generate_quiz
 
 @api_view(["GET"])
 def health_check(request):
@@ -8,3 +9,20 @@ def health_check(request):
     Returns JSON: {"status": "ok"} if the API is running.
     """
     return Response({"status": "ok"})
+
+@api_view(["POST"])
+def generate_quiz_view(request):
+    """
+    Stub endpoint to generate a quiz based on POSTed config.
+    Currently uses dummy data from services.quiz_engine.generate_quiz.
+    Expected JSON body (example):
+    {
+       "mode": "club",
+       "club_id": 1,
+       "category": "goals",
+       "limit": 10
+    }
+    """
+    config = request.data or {}
+    quiz = generate_quiz(config)
+    return Response(quiz)
