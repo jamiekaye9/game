@@ -1,6 +1,20 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .services.quiz_engine import generate_quiz
+from .models import Club, Season
+from .serializers import ClubSerializer, SeasonSerializer
+
+@api_view(['GET'])
+def list_clubs(request):
+    clubs = Club.objects.order_by('name')
+    serializer = ClubSerializer(clubs, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def list_seasons(request):
+    seasons = Season.objects.order_by("label")
+    serializer = SeasonSerializer(seasons, many=True)
+    return Response(serializer.data)
 
 @api_view(["GET"])
 def health_check(request):
