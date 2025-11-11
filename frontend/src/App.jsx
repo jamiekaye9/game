@@ -1,8 +1,12 @@
-import { useEffect } from "react";
-import { fetchHealth } from "./api";
+import { useEffect, useState } from "react";
+import { fetchHealth, generateQuiz } from "./api";
 import QuizSetupForm from "./components/QuizSetupForm";
 
 const App = () => {
+  const [quizResult, setQuizResult] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+
   useEffect(() => {
     const checkHealth = async () => {
       const data = await fetchHealth();
@@ -11,14 +15,38 @@ const App = () => {
     checkHealth();
   }, []);
 
-  const handleQuizSetup = (config) => {
-    console.log("App received quiz config:", config);
+  const handleQuizSetup = async (config) => {
+    try {
+      setError("")
+      setLoading(true)
+      console.log("Requesting quiz with config:", config);
+      const data = await generateQuiz(config)
+      console.log("Quiz generated:", data);
+      setQuizResult(data)
+    } catch (error) {
+      setError("Could not generate quiz. Check console for details")
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (
     <div>
       <h1>PL Quiz</h1>
+
       <QuizSetupForm onSubmit={handleQuizSetup} />
+
+      {loading && <p>Loading quiz...</p>}
+      {error && <p>{error}</p>}
+
+      {quizResult && (
+        <div>
+          <h2>Quiz Preview</h2>
+          <pre>{JSON.stringify(quizResult, null, 2)}</pre>
+        </div>
+      )}
+
     </div>
   );
 };
