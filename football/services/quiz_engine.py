@@ -77,6 +77,8 @@ def generate_quiz(config: QuizConfig) -> Dict[str, Any]:
             answers.append({
                 'id': row['person_club_season__person_id'],
                 'name': full_name.strip(),
+                'first_name': row['person_club_season__person__first_name'],
+                'last_name': row['person_club_season__person__last_name'],
                 'club': row.get('person_club_season__club__name'),
                 'total_goals': row['total_goals'],
             })
@@ -111,6 +113,8 @@ def generate_quiz(config: QuizConfig) -> Dict[str, Any]:
             answers.append({
                 'id': row['person_club_season__person_id'],
                 'name': full_name.strip(),
+                'first_name': row['person_club_season__person__first_name'],
+                'last_name': row['person_club_season__person__last_name'],
                 'club': row.get('person_club_season__club__name'),
                 'total_assists': row['total_assists'],
             })
@@ -145,6 +149,8 @@ def generate_quiz(config: QuizConfig) -> Dict[str, Any]:
             answers.append({
                     'id': row['person_club_season__person_id'],
                     'name': full_name.strip(),
+                    'first_name': row['person_club_season__person__first_name'],
+                    'last_name': row['person_club_season__person__last_name'],
                     'club': row.get('person_club_season__club__name'),
                     'total_appearances': row['total_appearances'],
                 })
@@ -178,6 +184,8 @@ def generate_quiz(config: QuizConfig) -> Dict[str, Any]:
             answers.append({
                 'id': row['person_id'],
                 'name': full_name.strip(),
+                'first_name': row['person__first_name'],
+                'last_name': row['person__last_name'],
             })
 
     return {
