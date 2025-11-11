@@ -66,9 +66,9 @@ const QuizSetupForm = ({ onSubmit }) => {
         }
 
         if (mode === 'club') {
-            config.club_id = Number(clubId)        
+            config.club_id = Number(selectedClub)        
         } else if (mode === 'season') {
-            config.season_id = Number(seasonId)
+            config.season_id = Number(selectedSeason)
         }
 
         console.log('Quiz setup submitted:', config);

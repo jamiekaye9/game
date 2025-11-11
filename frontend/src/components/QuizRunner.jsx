@@ -55,11 +55,20 @@ const QuizRunner = ({ answers }) => {
                     const isFound = foundIds.includes(ans.id)
 
                     return (
-                        <li
-                          key={ans.id}
-                          style={{color: isFound ? 'green' : 'gray'}}
+                       <li
+                        key={ans.id}
+                        style={{ color: isFound ? "green" : "gray" }}
                         >
-                            {isFound ? ans.name : "-"}
+                        {isFound ? (
+                            <>
+                            {ans.name}
+                            {ans.total_goals !== undefined && ` - ${ans.total_goals} goals`}
+                            {ans.total_assists !== undefined && ` - ${ans.total_assists} assists`}
+                            {ans.total_appearances !== undefined && ` - ${ans.total_appearances} appearances`}
+                            </>
+                        ) : (
+                            "—"
+                        )}
                         </li>
                     )
                 })}
