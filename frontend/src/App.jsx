@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchHealth, generateQuiz } from "./api";
 import QuizSetupForm from "./components/QuizSetupForm";
+import QuizRunner from "./components/QuizRunner";
 
 const App = () => {
   const [quizResult, setQuizResult] = useState(null)
@@ -40,12 +41,11 @@ const App = () => {
       {loading && <p>Loading quiz...</p>}
       {error && <p>{error}</p>}
 
-      {quizResult && (
-        <div>
-          <h2>Quiz Preview</h2>
-          <pre>{JSON.stringify(quizResult, null, 2)}</pre>
-        </div>
+      {quizResult && quizResult.answers && (
+      <QuizRunner answers={quizResult.answers} />
       )}
+
+
 
     </div>
   );
