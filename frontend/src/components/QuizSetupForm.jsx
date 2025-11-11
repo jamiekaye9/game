@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const QuizSetupForm = ({ onSubmit }) => {
     const [mode, setMode] = useState("club")
@@ -6,6 +6,27 @@ const QuizSetupForm = ({ onSubmit }) => {
     const [seasonId, setSeasonId] = useState("1")
     const [category, setCategory] = useState("goals")
     const [limit, setLimit] = useState(10)
+
+    const categoryOptions =
+        mode === "overall"
+            ? [
+                { value: "goals", label: "Top Goalscorers" },
+                { value: "assists", label: "Most Assists" },
+                { value: "appearances", label: "Most Appearances" },
+              ]
+            : [
+                { value: "goals", label: "Top Goalscorers" },
+                { value: "assists", label: "Most Assists" },
+                { value: "appearances", label: "Most Appearances" },
+                { value: "managers", label: "Managers" },
+              ];
+
+    useEffect(() => {
+        if (mode === 'overall' && category === 'managers') {
+            setCategory('goals')
+        }
+    }, [mode, category])
+
 
     const handlesubmit = (e) => {
         e.preventDefault()
@@ -66,9 +87,11 @@ const QuizSetupForm = ({ onSubmit }) => {
                 <label>
                     Quiz Type
                     <select value={category} onChange={(e) => setCategory(e.target.value)}>
-                        <option value="goals">Top Goalscorers</option>
-                        <option value="appearances">Most Appearances</option>
-                        <option value="managers">Managers</option>
+                        {categoryOptions.map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                                {opt.label}
+                            </option>
+                        ))}
                     </select>
                 </label>
             </div>
