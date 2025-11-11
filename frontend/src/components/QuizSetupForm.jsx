@@ -6,6 +6,11 @@ const QuizSetupForm = ({ onSubmit }) => {
     const [seasonId, setSeasonId] = useState("1")
     const [category, setCategory] = useState("goals")
     const [limit, setLimit] = useState(10)
+    const [clubs, setClubs] = useState([])
+    const [seasons, setSeasons] = useState([])
+    const [selectedClub, setSelectedClub] = useState("");
+    const [selectedSeason, setSelectedSeason] = useState("");
+
 
     const categoryOptions =
         mode === "overall"
@@ -20,6 +25,29 @@ const QuizSetupForm = ({ onSubmit }) => {
                 { value: "appearances", label: "Most Appearances" },
                 { value: "managers", label: "Managers" },
               ];
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [clubsRes, seasonsRes] = await Promise.all([
+                    // Will need to be changed for deployment
+                    fetch("http://127.0.0.1:8000/api/clubs/"),
+                    fetch("http://127.0.0.1:8000/api/seasons/"),
+                ])
+
+                const [clubsData, seasonsData] = await Promise.all([
+                    clubsRes.json(),
+                    seasonsRes.json(),
+                ])
+
+                setClubs(clubsData)
+                setSeasons(seasonsData)
+            } catch (error) {
+                console.error('Error fetching clubs or seasons:', error)
+            }
+        }
+        fetchData()
+    }, [])
 
     useEffect(() => {
         if (mode === 'overall' && category === 'managers') {
@@ -63,10 +91,13 @@ const QuizSetupForm = ({ onSubmit }) => {
                 <div>
                     <label>
                         Club:
-                        <select value={clubId} onChange={(e) => setClubId(e.target.value)}>
-                            <option value="1">Manchester United</option>
-                            <option value="2">Chelsea</option>
-                            <option value="3">Liverpool</option>
+                        <select name="club" value={selectedClub} onChange={(e) => setSelectedClub(e.target.value)}>
+                            <option value="">Select a club</option>
+                            {clubs.map((club) => (
+                                <option value={club.id} key={club.id}>
+                                    {club.name}
+                                </option>
+                            ))}
                         </select>
                     </label>
                 </div>
@@ -75,10 +106,13 @@ const QuizSetupForm = ({ onSubmit }) => {
                 <div>
                     <label>
                         Season:
-                        <select value={seasonId} onChange={(e) => setSeasonId(e.target.value)}>
-                            <option value="1">2020/21</option>
-                            <option value="2">2021/22</option>
-                            <option value="3">2022/23</option>
+                        <select name='season' value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)}>
+                            <option value="">Select a season</option>
+                            {seasons.map((season) => (
+                                <option value={season.id} key={season.id}>
+                                    {season.label}
+                                </option>
+                            ))}
                         </select>
                     </label>
                 </div>
