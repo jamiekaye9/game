@@ -29,6 +29,10 @@ const QuizRunner = ({ answers }) => {
             setFoundIds((prev) => [...prev, match.id])
         }
 
+        if (answers === foundIds) {
+            setGameEnd(true)
+        }
+
     }
 
     return (

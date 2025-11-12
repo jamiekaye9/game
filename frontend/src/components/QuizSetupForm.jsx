@@ -76,11 +76,12 @@ const QuizSetupForm = ({ onSubmit }) => {
     }
 
     return (
-        <form onSubmit={handlesubmit}>
-            <div>
-                <label>
-                    Mode:
-                    <select value={mode} onChange={(e) => setMode(e.target.value)}>
+        <div className="container mt-4">
+        <form onSubmit={handlesubmit} className="mx-auto col-md-6">
+            <div className="mb-3">
+                <label className="form-label w-100">
+                    Mode
+                    <select className="form-control w-100" value={mode} onChange={(e) => setMode(e.target.value)}>
                         <option value="club">Club</option>
                         <option value="season">Season</option>
                         <option value="overall">Overall</option>
@@ -88,10 +89,10 @@ const QuizSetupForm = ({ onSubmit }) => {
                 </label>
             </div>
             {mode === 'club' && (
-                <div>
-                    <label>
-                        Club:
-                        <select name="club" value={selectedClub} onChange={(e) => setSelectedClub(e.target.value)}>
+                <div className="mb-3">
+                    <label className="form-label w-100">
+                        Club
+                        <select className="form-control w-100" name="club" value={selectedClub} onChange={(e) => setSelectedClub(e.target.value)}>
                             <option value="">Select a club</option>
                             {clubs.map((club) => (
                                 <option value={club.id} key={club.id}>
@@ -103,10 +104,10 @@ const QuizSetupForm = ({ onSubmit }) => {
                 </div>
             )}
             {mode === 'season' && (
-                <div>
-                    <label>
+                <div className="mb-3">
+                    <label className="form-label w-100">
                         Season:
-                        <select name='season' value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)}>
+                        <select className="form-control w-100" name='season' value={selectedSeason} onChange={(e) => setSelectedSeason(e.target.value)}>
                             <option value="">Select a season</option>
                             {seasons.map((season) => (
                                 <option value={season.id} key={season.id}>
@@ -117,10 +118,10 @@ const QuizSetupForm = ({ onSubmit }) => {
                     </label>
                 </div>
             )}
-            <div>
-                <label>
+            <div className="mb-3">
+                <label className="form-label w-100">
                     Quiz Type
-                    <select value={category} onChange={(e) => setCategory(e.target.value)}>
+                    <select className="form-control w-100" value={category} onChange={(e) => setCategory(e.target.value)}>
                         {categoryOptions.map((opt) => (
                             <option key={opt.value} value={opt.value}>
                                 {opt.label}
@@ -129,10 +130,11 @@ const QuizSetupForm = ({ onSubmit }) => {
                     </select>
                 </label>
             </div>
-            <div>
-                <label>
-                    Number of answers:
-                    <input 
+            <div className="mb-3">
+                <label className="form-label w-100">
+                    Number of answers
+                    <input
+                      className="form-control w-100" 
                       type="number"
                       min="1"
                       max="100"
@@ -141,8 +143,9 @@ const QuizSetupForm = ({ onSubmit }) => {
                     />
                 </label>
             </div>
-            <button type="submit">Start Quiz</button>
+            <button className="btn btn-dark" type="submit">Start Quiz</button>
         </form>
+        </div>
     )
 }
 

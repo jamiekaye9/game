@@ -33,19 +33,19 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>PL Quiz</h1>
+    <div className="container border text-center mt-5 pt-2 pb-2">
+      <h1 className="row">PL Quiz</h1>
+      
+      <div className="row">
+        <QuizSetupForm onSubmit={handleQuizSetup} />
 
-      <QuizSetupForm onSubmit={handleQuizSetup} />
+        {loading && <p>Loading quiz...</p>}
+        {error && <p>{error}</p>}
 
-      {loading && <p>Loading quiz...</p>}
-      {error && <p>{error}</p>}
-
-      {quizResult && quizResult.answers && (
-      <QuizRunner answers={quizResult.answers} />
-      )}
-
-
+        {quizResult && quizResult.answers && (
+        <QuizRunner answers={quizResult.answers} />
+        )}
+      </div>
 
     </div>
   );
