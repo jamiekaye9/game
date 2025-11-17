@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { fetchHealth, generateQuiz } from "./api";
-import QuizSetupForm from "./components/QuizSetupForm";
-import QuizRunner from "./components/QuizRunner";
+import { useEffect, useState } from "react"
+import { fetchHealth, generateQuiz } from "./api"
+import QuizSetupForm from "./components/QuizSetupForm"
+import QuizRunner from "./components/QuizRunner"
 
 const App = () => {
   const [quizResult, setQuizResult] = useState(null)
@@ -10,46 +10,65 @@ const App = () => {
 
   useEffect(() => {
     const checkHealth = async () => {
-      const data = await fetchHealth();
-      console.log("Backend health:", data);
-    };
-    checkHealth();
-  }, []);
+      try {
+        const data = await fetchHealth()
+        console.log("Backend health:", data)
+      } catch (err) {
+        console.error("Health check failed:", err)
+      }
+    }
+    checkHealth()
+  }, [])
 
   const handleQuizSetup = async (config) => {
     try {
       setError("")
       setLoading(true)
-      console.log("Requesting quiz with config:", config);
-      const data = await generateQuiz(config)
-      console.log("Quiz generated:", data);
-      setQuizResult(data)
-    } catch (error) {
-      setError("Could not generate quiz. Check console for details")
-      console.error(error)
+      console.log("Requesting quiz with config:", config)
+      const result = await generateQuiz(config)
+      console.log("Quiz result:", result)
+      setQuizResult(result)   // ⬅️ Switch to quiz view
+    } catch (err) {
+      console.error(err)
+      setError("Could not generate quiz. Please try again.")
     } finally {
       setLoading(false)
     }
-  };
+  }
+
+  const handleBackToSetup = () => {
+    // Clear quiz result and go back to form
+    setQuizResult(null)
+  }
+
+  const category = quizResult?.config?.category
 
   return (
-    <div className="container border text-center mt-5 pt-2 pb-2">
-      <h1 className="row">PL Quiz</h1>
-      
-      <div className="row">
-        <QuizSetupForm onSubmit={handleQuizSetup} />
+    <div className="container py-4">
+      <h1 className="mb-4 text-center">PL Quiz</h1>
 
-        {loading && <p>Loading quiz...</p>}
-        {error && <p>{error}</p>}
+      {loading && <p>Loading quiz...</p>}
+      {error && <p className="text-danger">{error}</p>}
 
-        {quizResult && quizResult.answers && (
-        <QuizRunner answers={quizResult.answers} />
-        )}
-      </div>
+      {/* Show form when there is no quiz yet */}
+      {!quizResult && (
+        <div className="row">
+          <div className="col-md-6 mx-auto">
+            <QuizSetupForm onSubmit={handleQuizSetup} />
+          </div>
+        </div>
+      )}
 
+      {/* Show quiz when we have quizResult */}
+      {quizResult && (
+        <QuizRunner
+          answers={quizResult.answers}
+          category={category}
+          onBackToSetup={handleBackToSetup}
+        />
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default App;
-
+export default App
