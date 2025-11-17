@@ -15,7 +15,10 @@ class Command(BaseCommand):
     help = "Import season/club/person stats from a CSV file."
 
     def add_arguments(self, parser):
-        # python manage.py import_stats path/to/file.csv
+        """
+        Usage:
+            python manage.py import_stats path/to/file.csv
+        """
         parser.add_argument("csv_path", type=str, help="Path to the CSV file")
 
     def handle(self, *args, **options):
@@ -29,6 +32,13 @@ class Command(BaseCommand):
             raise CommandError(f"File not found: {csv_path}")
 
     def import_rows(self, reader):
+        """
+        Loop over each row in the CSV and import data according to strict rules:
+
+        - Never auto-match people by name.
+        - If person_id is given, it must match an existing Person.id.
+        - If person_id is empty, we always create a new Person.
+        """
         row_num = 1  # header line
 
         for row in reader:
@@ -64,7 +74,7 @@ class Command(BaseCommand):
             # 4. Club: get or create by name
             club, _ = Club.objects.get_or_create(name=club_name)
 
-            # 5. Person: resolve using our strict rules
+            # 5. Person: resolve using strict rules
             person = self.resolve_person(
                 row_num=row_num,
                 person_id_raw=person_id_raw,
@@ -129,7 +139,8 @@ class Command(BaseCommand):
                 return None
 
             try:
-                return Person.objects.get(id=person_id)
+                person = Person.objects.get(id=person_id)
+                return person
             except Person.DoesNotExist:
                 self.stdout.write(
                     f"Row {row_num}: no Person with id={person_id}, skipping."

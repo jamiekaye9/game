@@ -19,7 +19,7 @@ class SeasonAdmin(admin.ModelAdmin):
 
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ("first_name", "last_name", "full_name")
+    list_display = ("id", "first_name", "last_name", "full_name")
     search_fields = ("first_name", "last_name")
 
 class StatsPersonClubSeasonInline(admin.StackedInline):
